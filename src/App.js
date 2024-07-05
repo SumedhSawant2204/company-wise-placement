@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import NavBar from './components/NavBar';
+import YearDropdown from './components/YearDropdown';
+import PlacementTable from './components/PlacementTable';
 import './App.css';
+import { exportToExcel } from './utils/exportUtils';
 
 function App() {
+  const [selectedYear, setSelectedYear] = useState('');
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
+  const handleExport = () => {
+    exportToExcel(selectedYear);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar />
+      <div className="controls">
+        <YearDropdown selectedYear={selectedYear} onYearChange={handleYearChange} />
+        {selectedYear && (
+          <button className="export-button" onClick={handleExport}>
+            Export to Excel
+          </button>
+        )}
+      </div>
+      {selectedYear && <PlacementTable selectedYear={selectedYear} />}
     </div>
   );
 }
